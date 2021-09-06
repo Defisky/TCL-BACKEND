@@ -70,3 +70,18 @@ export const addEthAddresses = async (req: Request, res: Response) => {
 		}
 	}
 };
+
+export const removeEthAddresses = async (req: Request, res: Response) => {
+  const { addressList } = req.body;
+
+  const addressArray = addressList.split(',');
+  console.log(addressArray)
+  for(const item of addressArray) {
+    try {
+      await AcceptedAddress.findByIdAndRemove(item);
+    } catch (e) {
+      console.log(item);
+    }
+  }
+  return res.status(201).send({status: 'ok'});
+};
