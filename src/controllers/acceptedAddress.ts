@@ -25,7 +25,7 @@ export const getTier = async (req: Request, res: Response) => {
 
 	try {
 		let id: string = req.params.id;
-		const data = await AcceptedAddress.findById(id);
+		const data = await AcceptedAddress.findById(id.toLowerCase());
     if (data) {
       return res.status(200).send({tier: data.tier});
     } else {
@@ -45,13 +45,13 @@ export const addEthAddresses = async (req: Request, res: Response) => {
     const addressArray = addressList.split(',');
     console.log(addressArray)
     for(const item of addressArray) {
-      const existingData = await AcceptedAddress.findById(item);
+      const existingData = await AcceptedAddress.findById(item.toLowerCase());
       if (existingData) {
         existingData.tier = tier;
         await existingData.save();
       } else {
         const data = new AcceptedAddress();
-        data._id = item;
+        data._id = item.toLowerCase();
         data.tier = tier;
         data.joined_platform = luxon.DateTime.utc().toString();
         await data.save();
@@ -78,7 +78,7 @@ export const removeEthAddresses = async (req: Request, res: Response) => {
   console.log(addressArray)
   for(const item of addressArray) {
     try {
-      await AcceptedAddress.findByIdAndRemove(item);
+      await AcceptedAddress.findByIdAndRemove(item.toLowerCase());
     } catch (e) {
       console.log(item);
     }
